@@ -22,6 +22,17 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+project.ext.envConfigFiles = [
+        developdebug: ".env.dev",
+        developrelease: ".env.dev",
+        stagingdebug: ".env.staging",
+        stagingrelease: ".env.staging",
+        productiondebug: ".env",
+        productionrelease: ".env",
+]
+apply from: project(':flutter_config').projectDir.getPath() + "/dotenv.gradle"
+
+
 android {
     namespace "com.example.flutter_auth"
     compileSdkVersion flutter.compileSdkVersion
@@ -56,6 +67,20 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
+        }
+    }
+
+    flavorDimensions "flavors"
+
+    productFlavors {
+        develop {
+            dimension "flavors"
+        }
+        staging {
+            dimension "flavors"
+        }
+        production {
+            dimension "flavors"
         }
     }
 }
