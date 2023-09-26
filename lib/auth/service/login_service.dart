@@ -1,3 +1,5 @@
+import 'dart:math';
+import 'dart:developer' as developer;
 import '/auth/model/update_password_request_model.dart';
 import '/auth/model/update_password_response_model.dart';
 import '/auth/model/reset_request_model.dart';
@@ -9,10 +11,13 @@ import '/auth/model/register_response_model.dart';
 import 'package:get/get_connect.dart';
 import 'package:get/get_connect/http/src/status/http_status.dart';
 import 'package:flutter_config/flutter_config.dart';
+import 'package:http/http.dart' as http;
 
 /// LoginService responsible to communicate with web-server
 /// via authenticaton related APIs
 class LoginService extends GetConnect {
+  static var client = http.Client();
+
   final String loginUrl =
       FlutterConfig.get('API_DOMAIN') + FlutterConfig.get('API_LOGIN_PATH');
   final String registerUrl =
@@ -23,10 +28,17 @@ class LoginService extends GetConnect {
       FlutterConfig.get('API_UPDATE_PASSWORD_PATH');
 
   Future<LoginResponseModel?> fetchLogin(LoginRequestModel model) async {
-    final response = await post(loginUrl, model.toJson());
+    developer.log('loginUrl: ' + loginUrl.toString());
+    developer.log(model.toJson().toString());
+
+    final response =
+        await client.post(Uri.parse(loginUrl), body: model.toJson());
+
+    developer.log(response.statusCode.toString());
 
     if (response.statusCode == HttpStatus.ok) {
-      return LoginResponseModel.fromJson(response.body);
+      return null;
+      //LoginResponseModel.fromJson(response.body.toJson());
     } else {
       return null;
     }
