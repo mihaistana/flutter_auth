@@ -51,12 +51,12 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
               await _viewModel.resetPassword(emailCtr.text);
             }
           },
-          child: const Text('Login'),
+          child: const Text('Reset Password'),
         ),
-        TextButton(
+        /*TextButton(
           onPressed: () {},
           child: const Text('Does not have an account?'),
-        )
+        )*/
       ]),
     );
   }

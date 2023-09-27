@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'auth_view_model.dart';
+import 'register.dart';
+import 'reset_password.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -57,18 +59,45 @@ class _LoginViewState extends State<LoginView> {
           controller: passwordCtr,
           decoration: inputDecoration('Password', Icons.lock),
         ),
-        ElevatedButton(
-          onPressed: () async {
-            if (formKey.currentState?.validate() ?? false) {
-              await _viewModel.loginUser(emailCtr.text, passwordCtr.text);
-            }
-          },
-          child: const Text('Login'),
+        const SizedBox(
+          height: 8,
         ),
-        TextButton(
-          onPressed: () {},
-          child: const Text('Does not have an account?'),
-        )
+        ElevatedButton(
+            onPressed: () async {
+              if (formKey.currentState?.validate() ?? false) {
+                await _viewModel.loginUser(emailCtr.text, passwordCtr.text);
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25),
+              ),
+              elevation: 5.0,
+            ),
+            child: const Padding(
+              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+              child: Text(
+                'Login',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
+            )),
+        OverflowBar(
+            spacing: 8,
+            overflowAlignment: OverflowBarAlignment.center,
+            children: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Get.to(const ResetPasswordView());
+                },
+                child: const Text('Forgot password?'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Get.to(const RegisterView());
+                },
+                child: const Text('Register'),
+              ),
+            ]),
       ]),
     );
   }
@@ -91,15 +120,15 @@ InputDecoration inputDecoration(String labelText, IconData iconData,
     prefixIconConstraints: const BoxConstraints(minWidth: 60),
     enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(30),
-        borderSide: const BorderSide(color: Colors.black)),
+        borderSide: const BorderSide(color: Colors.white)),
     focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(30),
-        borderSide: const BorderSide(color: Colors.black)),
+        borderSide: const BorderSide(color: Colors.white)),
     errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(30),
-        borderSide: const BorderSide(color: Colors.black)),
+        borderSide: const BorderSide(color: Colors.white)),
     border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(30),
-        borderSide: const BorderSide(color: Colors.black)),
+        borderSide: const BorderSide(color: Colors.white)),
   );
 }

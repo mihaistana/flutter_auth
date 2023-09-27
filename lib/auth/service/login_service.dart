@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'dart:developer' as developer;
 import '/auth/model/update_password_request_model.dart';
 import '/auth/model/update_password_response_model.dart';
@@ -12,33 +11,26 @@ import 'package:get/get_connect.dart';
 import 'package:get/get_connect/http/src/status/http_status.dart';
 import 'package:flutter_config/flutter_config.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 /// LoginService responsible to communicate with web-server
 /// via authenticaton related APIs
 class LoginService extends GetConnect {
   static var client = http.Client();
 
-  final String loginUrl =
-      FlutterConfig.get('API_DOMAIN') + FlutterConfig.get('API_LOGIN_PATH');
-  final String registerUrl =
-      FlutterConfig.get('API_DOMAIN') + FlutterConfig.get('API_REGISTER_PATH');
-  final String resetUrl = FlutterConfig.get('API_DOMAIN') +
-      FlutterConfig.get('API_RESET_PASSWORD_PATH');
-  final String updateUrl = FlutterConfig.get('API_DOMAIN') +
-      FlutterConfig.get('API_UPDATE_PASSWORD_PATH');
-
   Future<LoginResponseModel?> fetchLogin(LoginRequestModel model) async {
-    developer.log('loginUrl: ' + loginUrl.toString());
-    developer.log(model.toJson().toString());
+    final String loginUrl =
+        FlutterConfig.get('API_DOMAIN') + FlutterConfig.get('API_LOGIN_PATH');
 
-    final response =
-        await client.post(Uri.parse(loginUrl), body: model.toJson());
-
-    developer.log(response.statusCode.toString());
+    final response = await client.post(Uri.parse(loginUrl),
+        body: jsonEncode(model.toJson()),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        });
 
     if (response.statusCode == HttpStatus.ok) {
-      return null;
-      //LoginResponseModel.fromJson(response.body.toJson());
+      return LoginResponseModel.fromJson(jsonDecode(response.body));
     } else {
       return null;
     }
@@ -46,20 +38,37 @@ class LoginService extends GetConnect {
 
   Future<RegisterResponseModel?> fetchRegister(
       RegisterRequestModel model) async {
-    final response = await post(registerUrl, model.toJson());
+    final String registerUrl = FlutterConfig.get('API_DOMAIN') +
+        FlutterConfig.get('API_REGISTER_PATH');
 
+    developer.log(registerUrl);
+    developer.log(model.toJson().toString());
+    final response = await client.post(Uri.parse(registerUrl),
+        body: jsonEncode(model.toJson()),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        });
+    developer.log(response.body);
     if (response.statusCode == HttpStatus.ok) {
-      return RegisterResponseModel.fromJson(response.body);
+      return RegisterResponseModel.fromJson(jsonDecode(response.body));
     } else {
       return null;
     }
   }
 
   Future<ResetResponseModel?> fetchReset(ResetRequestModel model) async {
-    final response = await post(registerUrl, model.toJson());
+    final String resetUrl = FlutterConfig.get('API_DOMAIN') +
+        FlutterConfig.get('API_RESET_PASSWORD_PATH');
+    final response = await client.post(Uri.parse(resetUrl),
+        body: jsonEncode(model.toJson()),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        });
 
     if (response.statusCode == HttpStatus.ok) {
-      return ResetResponseModel.fromJson(response.body);
+      return ResetResponseModel.fromJson(jsonDecode(response.body));
     } else {
       return null;
     }
@@ -67,10 +76,17 @@ class LoginService extends GetConnect {
 
   Future<UpdatePasswordResponseModel?> fetchUpdatePassword(
       UpdatePasswordRequestModel model) async {
-    final response = await put(updateUrl, model.toJson());
+    final String updateUrl = FlutterConfig.get('API_DOMAIN') +
+        FlutterConfig.get('API_UPDATE_PASSWORD_PATH');
+    final response = await client.put(Uri.parse(updateUrl),
+        body: jsonEncode(model.toJson()),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        });
 
     if (response.statusCode == HttpStatus.ok) {
-      return UpdatePasswordResponseModel.fromJson(response.body);
+      return UpdatePasswordResponseModel.fromJson(jsonDecode(response.body));
     } else {
       return null;
     }

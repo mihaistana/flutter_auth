@@ -8,6 +8,7 @@ import '/auth/service/login_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 //import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'dart:developer' as developer;
 
 class LoginViewModel extends GetxController {
   late final LoginService _loginService;
@@ -24,6 +25,8 @@ class LoginViewModel extends GetxController {
     final response = await _loginService
         .fetchLogin(LoginRequestModel(email: email, password: password));
 
+    developer.log(response.toString());
+
     if (response != null) {
       /// Set isLogin to true
       _authManager.login(response.token);
@@ -39,9 +42,9 @@ class LoginViewModel extends GetxController {
     }
   }
 
-  Future<void> registerUser(String email, String password) async {
-    final response = await _loginService
-        .fetchRegister(RegisterRequestModel(email: email, password: password));
+  Future<void> registerUser(String email, String password, String name) async {
+    final response = await _loginService.fetchRegister(
+        RegisterRequestModel(email: email, password: password, name: name));
 
     if (response != null) {
       /// Set isLogin to true
@@ -78,8 +81,8 @@ class LoginViewModel extends GetxController {
   }
 
   Future<void> updatePassword(String password) async {
-    final response =
-        await _loginService.fetchUpdatePassword(UpdatePasswordRequestModel(password: password));
+    final response = await _loginService
+        .fetchUpdatePassword(UpdatePasswordRequestModel(password: password));
 
     if (response != null) {
       /// Set isLogin to true
@@ -95,6 +98,4 @@ class LoginViewModel extends GetxController {
           });
     }
   }
-  
-
 }

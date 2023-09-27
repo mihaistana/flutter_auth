@@ -16,6 +16,7 @@ class _RegisterViewState extends State<RegisterView> {
   final LoginViewModel _viewModel = Get.put(LoginViewModel());
 
   TextEditingController emailCtr = TextEditingController();
+  TextEditingController nameCtr = TextEditingController();
   TextEditingController passwordCtr = TextEditingController();
 
   @override
@@ -37,13 +38,25 @@ class _RegisterViewState extends State<RegisterView> {
       key: formKey,
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         TextFormField(
+          controller: nameCtr,
+          validator: (value) {
+            return (value == null || value.isEmpty)
+                ? 'Please Enter Name'
+                : null;
+          },
+          decoration: inputDecoration('Name', Icons.person),
+        ),
+        const SizedBox(
+          height: 8,
+        ),
+        TextFormField(
           controller: emailCtr,
           validator: (value) {
             return (value == null || value.isEmpty)
                 ? 'Please Enter Email'
                 : null;
           },
-          decoration: inputDecoration('E-mail', Icons.person),
+          decoration: inputDecoration('E-mail', Icons.email),
         ),
         const SizedBox(
           height: 8,
@@ -52,7 +65,9 @@ class _RegisterViewState extends State<RegisterView> {
           validator: (value) {
             return (value == null || value.isEmpty)
                 ? 'Please Enter Password'
-                : null;
+                : ((value.length < 8)
+                    ? 'Please Enter at least 8 characters'
+                    : null);
           },
           controller: passwordCtr,
           decoration: inputDecoration('Password', Icons.lock),
@@ -71,15 +86,16 @@ class _RegisterViewState extends State<RegisterView> {
         ElevatedButton(
           onPressed: () async {
             if (formKey.currentState?.validate() ?? false) {
-              await _viewModel.registerUser(emailCtr.text, passwordCtr.text);
+              await _viewModel.registerUser(
+                  emailCtr.text, passwordCtr.text, nameCtr.text);
             }
           },
           child: const Text('Register'),
         ),
-        TextButton(
+        /*TextButton(
           onPressed: () {},
           child: const Text('Login'),
-        )
+        )*/
       ]),
     );
   }
@@ -102,15 +118,15 @@ InputDecoration inputDecoration(String labelText, IconData iconData,
     prefixIconConstraints: const BoxConstraints(minWidth: 60),
     enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(30),
-        borderSide: const BorderSide(color: Colors.black)),
+        borderSide: const BorderSide(color: Colors.white)),
     focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(30),
-        borderSide: const BorderSide(color: Colors.black)),
+        borderSide: const BorderSide(color: Colors.white)),
     errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(30),
-        borderSide: const BorderSide(color: Colors.black)),
+        borderSide: const BorderSide(color: Colors.white)),
     border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(30),
-        borderSide: const BorderSide(color: Colors.black)),
+        borderSide: const BorderSide(color: Colors.white)),
   );
 }
